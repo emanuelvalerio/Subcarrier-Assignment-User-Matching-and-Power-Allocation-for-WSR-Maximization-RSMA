@@ -1,0 +1,2 @@
+# Subcarrier-Assignment-User-Matching-and-Power-Allocation-for-Weighted-Sum-Rate-Maximization-RSMA
+This repository contains simulations and analysis related to the proposed methodology in the article [Subcarrier assignment, user matching and power allocation for weighted sum-rate maximization with RSMA]. The code implements key algorithms, presents numerical results, and validates the theoretical findings discussed in the paper.
