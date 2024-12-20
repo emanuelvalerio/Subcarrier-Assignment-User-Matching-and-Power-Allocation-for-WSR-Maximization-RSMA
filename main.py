@@ -2,9 +2,7 @@ import pandas as pd
 import numpy as np
 import distances as dt
 import channelModel as ch
-import lowComplexityUserMatching as uMatch
 import combinationsVectors as combV
-import optimalPA as optPA
 import rateCalculation
 import unimodularMatrixBenchmark as benchmark
 
