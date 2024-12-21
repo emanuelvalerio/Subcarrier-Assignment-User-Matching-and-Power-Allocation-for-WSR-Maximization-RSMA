@@ -2,7 +2,7 @@ import numpy as np
 import privateRateCalculation as prc
 import commomRateCalculation as crc
 import math
-def partialDerivative():
+def partialDerivative(h,restX,Pn,nUsers,n,uj):
     comb = int((math.factorial(nUsers)/((math.factorial(nUsers-2))*math.factorial(2))));
     aux = np.where(restX[:, 0].astype(int) == int(n+1))[0];
     idx = int(np.where(restX[aux[0]:aux[comb-1]+1,3] != 0)[0]);
@@ -15,8 +15,14 @@ def partialDerivative():
     hnj = h[:,n,jj];
     pRate1,pRate2,gamma1,gamma2,rho = prc.privateRate(h,n,ii,jj,Pn1,Pn2);
     Nnij,Dnij,cRate = crc.commomRate(h,Pnc,n,ii,jj,gamma1,gamma2,rho);
+    dRnij1_dPn = (1/np.log(2))*(((np.linalg.norm(hni)**2)*rho/3)/(1+((np.linalg.norm(hni)**2)*rho*Pn1)));
+    dRnij2_dPn = (1/np.log(2))*(((np.linalg.norm(hnj)**2)*rho/3)/(1+((np.linalg.norm(hnj)**2)*rho*Pn2)));
+    auxDerivative = (np.linalg.norm(hni)**2) + (np.linalg.norm(hnj)**2) - (((gamma1+gamma2)/(np.sqrt(gamma1)*np.sqrt(gamma2)))*(np.abs(np.dot(np.conj(hni).T,hnj))**2));
+    dRnijc_dPn = (1/np.log(2))*((rho*(np.linalg.norm(hni)**2)* (np.linalg.norm(hnj)**2)*auxDerivative)/(3*Dnij*(Nnij+Dnij)));
+    df_dPn = uj[ii]*dRnij1_dPn + uj[jj]*dRnij2_dPn + ((uj[ii]+uj[jj])/2)*dRnijc_dPn;
+    return df_dPn;
     
-def gradDes(Pmax,N):
+def gradDes(h,restX,nUsers,Pmax,N,uj,epsilon):
     alpha = 15.1;
     Pn = [(Pmax / N) * x for x in np.ones((N, 1))]  # Initial power per subcarrier
     Pn_prev = Pn;
@@ -26,4 +32,4 @@ def gradDes(Pmax,N):
     
     while(t<1 or (np.abs(objectiveFun()-objectiveFun())>epsilon)):
         Pn_prev = Pn; # update the previous power vector
-        dgk_dPk = partialDerivative();
+        dgk_dPk = partialDerivative(h,restX,Pn[k],nUsers,k,uj);
