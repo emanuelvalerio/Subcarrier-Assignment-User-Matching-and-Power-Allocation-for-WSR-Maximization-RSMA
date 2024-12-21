@@ -22,7 +22,23 @@ def partialDerivative(h,restX,Pn,nUsers,n,uj):
     dRnijc_dPn = (1/np.log(2))*((rho*(np.linalg.norm(hni)**2)* (np.linalg.norm(hnj)**2)*auxDerivative)/(3*Dnij*(Nnij+Dnij)));
     df_dPn = uj[ii]*dRnij1_dPn + uj[jj]*dRnij2_dPn + ((uj[ii]+uj[jj])/2)*dRnijc_dPn;
     return df_dPn;
+
+def objectiveFun(h,restX,Pn,N,nUsers,uj):
+    comb = int((math.factorial(nUsers)/((math.factorial(nUsers-2))*math.factorial(2))));
+    faux = np.zeros((N,1));
     
+    for n in range(N):
+        aux = np.where(restX[:, 0].astype(int) == int(n+1))[0];
+        idx = int(np.where(restX[aux[0]:aux[comb-1]+1,3] != 0)[0]);
+        ii = int(restX[aux[idx],1]-1); # decrease in 1 because was increased 1 when the matrix was it built
+        jj = int(restX[aux[idx],2]-1);
+        Pn1 = Pn2 = Pnc = Pn[n]/3;
+        pRate1,pRate2,gamma1,gamma2,rho = prc.privateRate(h,n,ii,jj,Pn1,Pn2);
+        Nnin,Dnij,cRate = crc.commomRate(h,Pnc,n,ii,jj,gamma1,gamma2,rho);
+        faux[n,:] = uj[ii]*pRate1 + uj[jj]*pRate2 + ((uj[ii]+uj[jj])/2)*cRate;
+        
+    return sum(faux);
+
 def gradDes(h,restX,nUsers,Pmax,N,uj,epsilon):
     alpha = 15.1; # step size
     Pn = [(Pmax / N) * x for x in np.ones((N, 1))]  # Initial power per subcarrier
