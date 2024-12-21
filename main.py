@@ -4,12 +4,13 @@ import distances as dt
 import channelModel as ch
 import combinationsVectors as combV
 import unimodularMatrix as benchmark
+import gradientDescent as gradDes
 
 # System settings
 Nt = 4  # Number of antennas at the transmitter
-Pmax = 100  # Total available power
+Pmax = 10  # Total available power
 nUsers = 8  # Number of users
-N = 2  # Number of subcarriers
+N = 8  # Number of subcarriers
 dInnerRadius = 1
 dOuterRadius = 10
 gamma = 3  # Path loss exponent
@@ -25,4 +26,6 @@ x_tum = x_tum.reshape((-1, 1))
 # Vector combination
 combVect = combV.combVector(nUsers, N)
 userMatch = np.hstack((combVect, x_tum))
+Pn_opt = gradDes.gradDes(h,userMatch,nUsers,Pmax,N,uj,epsilon);
+print(Pn_opt)
 

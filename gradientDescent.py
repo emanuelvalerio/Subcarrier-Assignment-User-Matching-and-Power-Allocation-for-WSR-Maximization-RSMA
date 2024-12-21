@@ -42,26 +42,29 @@ def objectiveFun(h,restX,Pn,N,nUsers,uj):
 def gradDes(h,restX,nUsers,Pmax,N,uj,epsilon):
     alpha = 15.1; # step size
     Pn = [(Pmax / N) * x for x in np.ones((N, 1))]  # Initial power per subcarrier
-    Pn_prev = Pn;
+    Pn_prev = [(Pmax / N) * x for x in np.ones((N, 1))];
     t = 0;
     k = 0;
     Z = [];
     
-    while(t<1 or (np.abs(objectiveFun()-objectiveFun())>epsilon)):
-        Pn_prev = Pn; # update the previous power vector
+    while(t<1 or (np.abs(objectiveFun(h,restX,Pn,N,nUsers,uj)-objectiveFun(h,restX,Pn_prev,N,nUsers,uj))>epsilon)):
+        Pn_prev = Pn.copy(); # update the previous power vector
         dgk_dPk = partialDerivative(h,restX,Pn[k],nUsers,k,uj);
         for n in set(range(0, N)) - set([k] + Z):
             #Update the power
             dgn_dPn = partialDerivative(h,restX,Pn[n],nUsers,n,uj);
             dfk_dPn = dgn_dPn - dgk_dPk;
-            Pn[n] = Pn_prev + alpha*dfk_dPn;
+            Pn[n] = Pn_prev[n] + alpha*dfk_dPn;
             
-        Z = np.hstack((Z, np.where(Pn<0))); # Find the indexs of negative power allocated
-        for z in range(Z):
+        for ii in range(len(Pn)):
+            if Pn[ii]<0:
+                Z.extend([ii]);# Find the indexs of negative power allocated
+                
+        for z in range(len(Z)):
             Pn[Z[z]] = 0; # Power constraint, so, for all negative power allocated we replaced to zero.
         
         if np.isin(k,Z):
-            aux = set(range(0, N)) - set(Z);
+            aux = list(set(range(0, N)) - set(Z));
             k = aux[0]; # update k
             
         #Upper Bound Power constraint
@@ -69,4 +72,6 @@ def gradDes(h,restX,nUsers,Pmax,N,uj,epsilon):
         
         t+=1;
         alpha=alpha/t;
+        
+    return Pn;
         
