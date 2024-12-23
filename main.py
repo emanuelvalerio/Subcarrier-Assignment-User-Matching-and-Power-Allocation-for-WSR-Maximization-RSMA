@@ -20,7 +20,7 @@ epsilon = 1e-4
 uj = np.ones((nUsers, 1))  # Weight vector
 n_iterations = 1000  # Número de repetições de Monte Carlo
 
-N_values = [4,5,6,7,8,9,10];  # Number of subcarrier that will be evaluation
+N_values = [10];  # Number of subcarrier that will be evaluation
 
 results = []
 
@@ -57,6 +57,6 @@ for N in N_values:
 df = pd.DataFrame(results, columns=["N", "Repetition", "Rate_TUM", "Rate_Random","Rate_EPA"])
 
 # Salvar os resultados em um arquivo CSV
-df.to_csv("Results/monte_carlo_rates.csv", index=False)
+df.to_csv("Results/monte_carlo_rates_aux.csv", index=False)
 
 print("Simulação Monte Carlo finalizada. Resultados salvos em 'monte_carlo_rates.csv'.")

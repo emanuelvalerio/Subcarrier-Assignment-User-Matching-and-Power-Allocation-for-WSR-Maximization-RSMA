@@ -40,7 +40,7 @@ def objectiveFun(h,restX,Pn,N,nUsers,uj):
     return sum(faux);
 
 def gradDes(h,restX,nUsers,Pmax,N,uj,epsilon):
-    alpha = 15.1; # step size
+    alpha = 7.1; # step size
     Pn = [(Pmax / N) * x for x in np.ones((N, 1))]  # Initial power per subcarrier
     Pn_prev = [(Pmax / N) * x for x in np.ones((N, 1))];
     t = 0;
@@ -50,7 +50,7 @@ def gradDes(h,restX,nUsers,Pmax,N,uj,epsilon):
     while(t<1 or (np.abs(objectiveFun(h,restX,Pn,N,nUsers,uj)-objectiveFun(h,restX,Pn_prev,N,nUsers,uj))>epsilon)):
         Pn_prev = Pn.copy(); # update the previous power vector
         dgk_dPk = partialDerivative(h,restX,Pn[k],nUsers,k,uj);
-        for n in set(range(0, N)) - set([k] + Z):
+        for n in set(range(N)) - set([k] + Z):
             #Update the power
             dgn_dPn = partialDerivative(h,restX,Pn[n],nUsers,n,uj);
             dfk_dPn = dgn_dPn - dgk_dPk;
@@ -71,7 +71,7 @@ def gradDes(h,restX,nUsers,Pmax,N,uj,epsilon):
         Pn[k] = Pmax - sum(Pn[i] for i in set(range(N)) - {k});
         
         t+=1;
-        alpha=alpha/t;
+       # alpha=alpha/t;
         
     return Pn;
         
