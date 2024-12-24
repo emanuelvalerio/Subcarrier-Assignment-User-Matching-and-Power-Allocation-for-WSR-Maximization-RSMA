@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import ast
 # Passo 1: Carregar os dados
-data = pd.read_csv("Results/sum-RateXnumer_of_subcarriers.csv")
+data = pd.read_csv("Results/monte_carlo_rates_aux.csv")
 
 # Passo 2: Converter strings para valores numéricos
 # Aplica `ast.literal_eval` para transformar a string em lista e extrai o primeiro valor

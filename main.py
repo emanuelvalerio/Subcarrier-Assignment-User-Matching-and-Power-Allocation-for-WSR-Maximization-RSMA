@@ -46,12 +46,12 @@ for N in N_values:
         Pn_opt_rand = gradDes.gradDes(h, userMatch_rand, nUsers, Pmax, N, uj, epsilon)
         
         # Cálculo da taxa total
-        rate_tum= userRateCalculation.userRate(h,userMatch_tum,Pn_opt_tum,uj,N,nUsers);
-        rate_rand= userRateCalculation.userRate(h,userMatch_rand,Pn_opt_rand,uj,N,nUsers);
-        rate_EPA=userRateCalculation.userRate(h,userMatch_tum,Pn,uj,N,nUsers);
+        rate_tum,user_rate_tum= userRateCalculation.userRate(h,userMatch_tum,Pn_opt_tum,uj,N,nUsers);
+        rate_rand,user_rate_rand= userRateCalculation.userRate(h,userMatch_rand,Pn_opt_rand,uj,N,nUsers);
+        rate_EPA,user_rate_EPA=userRateCalculation.userRate(h,userMatch_tum,Pn,uj,N,nUsers);
         
         # Salvar os resultados na lista
-        results.append([N, i + 1, sum(rate_tum).item(), sum(rate_rand).item(),sum(rate_EPA).item()])
+        results.append([N, i + 1, sum(user_rate_tum).item(), sum(user_rate_rand).item(),sum(user_rate_EPA).item()])
 
 # Converter os resultados em um DataFrame do pandas
 df = pd.DataFrame(results, columns=["N", "Repetition", "Rate_TUM", "Rate_Random","Rate_EPA"])
