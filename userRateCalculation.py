@@ -31,4 +31,4 @@ def userRate(h,restX,P_opt,uj,N,nUsers):
         rate_subcarrier[n] = pRate1+pRate2+cRate;
         user_rate[ii] = user_rate[ii]+pRate1+(1/2)*cRate;
         user_rate[jj] = user_rate[jj]+pRate2+(1/2)*cRate;
-    return rate_subcarrier,user_rate;
+    return rate_subcarrier,user_rate
